@@ -70,9 +70,9 @@
                 <div class="w-16 h-16 rounded-2xl bg-emerald-100 text-emerald-600 flex items-center justify-center mx-auto mb-3 text-3xl shadow-inner">
                     <i class="fa-solid fa-wallet"></i>
                 </div>
-                <h1 class="text-2xl font-extrabold text-slate-900 font-malayalam">App Wisdom</h1>
-                <p class="text-xs text-emerald-700 font-bold mt-0.5 font-malayalam">വിസ്ഡം സെന്റർ അമ്പലപ്പാറ</p>
-                <p class="text-xs text-slate-500 mt-2 font-malayalam">തുടരാൻ അഡ്മിൻ പാസ്‌വേഡ് നൽകുക (admin123)</p>
+                <h1 class="text-3xl font-extrabold text-slate-900 font-malayalam">App Wisdom</h1>
+                <p class="text-sm text-emerald-700 font-bold mt-1 font-malayalam">വിസ്ഡം സെന്റർ അമ്പലപ്പാറ</p>
+                <p class="text-xs text-slate-500 mt-2 font-malayalam">തുടരാൻ ലോഗിൻ ചെയ്യുക (Admin or Member)</p>
             </div>
             <form onsubmit="handleInitialLogin(event)" class="space-y-4">
                 <div>
@@ -83,30 +83,27 @@
                     ലോഗിൻ ചെയ്യുക (Login)
                 </button>
             </form>
-            <p class="text-center text-[11px] text-slate-400 mt-6 font-malayalam">Default Password: admin123</p>
+            <div class="mt-6 pt-4 border-t border-slate-100 text-[11px] text-slate-400 font-malayalam text-center">
+                <p>അഡ്മിൻ അല്ലെങ്കിൽ മെംബർ പാസ്‌വേഡ് ഉപയോഗിക്കുക</p>
+            </div>
         </div>
     </div>
 
     <div id="app" class="min-h-full flex flex-col hidden">
         
-        <!-- Header - Centered title as requested -->
         <header class="bg-gradient-to-r from-emerald-700 via-teal-700 to-cyan-800 text-white shadow-xl sticky top-0 z-40">
-            <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-5 flex flex-col md:flex-row justify-between items-center gap-4 text-center md:text-left">
-                <div class="flex items-center space-x-3 rtl:space-x-reverse mx-auto md:mx-0">
-                    <div class="w-12 h-12 rounded-2xl bg-white/10 backdrop-blur-md flex items-center justify-center border border-white/20 shadow-inner">
-                        <i class="fa-solid fa-wallet text-2xl text-emerald-300"></i>
-                    </div>
-                    <div>
-                        <h1 class="text-3xl font-extrabold tracking-wide font-malayalam text-center md:text-left">App Wisdom</h1>
-                        <p class="text-sm text-emerald-200 font-bold font-malayalam tracking-wide text-center md:text-left">വിസ്ഡം സെന്റർ അമ്പലപ്പാറ</p>
-                    </div>
+            <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-5 flex flex-col items-center justify-center text-center relative">
+                <div class="w-12 h-12 rounded-2xl bg-white/10 backdrop-blur-md flex items-center justify-center border border-white/20 shadow-inner mb-2">
+                    <i class="fa-solid fa-wallet text-2xl text-emerald-300"></i>
                 </div>
+                <h1 class="text-3xl font-extrabold tracking-wide font-malayalam">App Wisdom</h1>
+                <p class="text-sm text-emerald-200 font-bold font-malayalam tracking-wide mt-0.5">വിസ്ഡം സെന്റർ അമ്പലപ്പാറ</p>
                 
-                <div class="flex items-center gap-3">
-                    <div class="flex items-center gap-2 bg-emerald-900/60 px-3.5 py-1.5 rounded-full border border-emerald-500/30 text-xs font-bold text-emerald-200 font-malayalam">
-                        <i class="fa-solid fa-shield-halved text-emerald-400"></i> അഡ്മിൻ ലോഗിൻ സജീവം
+                <div class="absolute top-5 right-4 sm:right-6 flex items-center gap-3">
+                    <div id="user-role-badge" class="flex items-center gap-2 bg-emerald-900/60 px-3.5 py-1.5 rounded-full border border-emerald-500/30 text-xs font-bold text-emerald-200 font-malayalam">
+                        <!-- Dynamic Role -->
                     </div>
-                    <button onclick="logoutApp()" class="px-4 py-2 rounded-xl bg-white/10 hover:bg-white/20 text-white font-bold text-sm border border-white/20 backdrop-blur-sm transition flex items-center gap-2 shadow-sm font-malayalam">
+                    <button onclick="logoutApp()" class="px-3.5 py-1.5 rounded-xl bg-white/10 hover:bg-white/20 text-white font-bold text-xs border border-white/20 backdrop-blur-sm transition flex items-center gap-1.5 shadow-sm font-malayalam">
                         <i class="fa-solid fa-lock-open"></i> ലോഗ്ഔട്ട്
                     </button>
                 </div>
@@ -115,7 +112,6 @@
 
         <main class="flex-grow max-w-7xl w-full mx-auto px-4 sm:px-6 lg:px-8 py-8">
             
-            <!-- Summary Stat Cards -->
             <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
                 <!-- Total Income Card -->
                 <div class="bg-white rounded-3xl p-6 shadow-card border border-emerald-100 relative overflow-hidden group hover:shadow-xl transition-all">
@@ -148,13 +144,13 @@
                 </div>
             </div>
 
-            <div class="mb-10">
+            <div id="action-buttons-section" class="mb-10">
                 <h2 class="text-lg font-bold text-slate-800 mb-4 flex items-center gap-2 text-center justify-center font-malayalam">
                     <i class="fa-solid fa-grip text-emerald-600"></i> വരവ് ചെലവ് കണക്കുകൾ
                 </h2>
-                <div class="grid grid-cols-1 sm:grid-cols-3 gap-6">
+                <div id="buttons-grid-container" class="grid grid-cols-1 sm:grid-cols-3 gap-6">
                     <!-- Button 1: Center Income (സെന്റർ വരവ്) -->
-                    <button onclick="openModal('income')" class="btn-3d bg-gradient-to-br from-emerald-500 to-emerald-700 hover:from-emerald-600 hover:to-emerald-800 text-white p-6 rounded-3xl shadow-3d-emerald active:shadow-3d-emerald-active flex flex-col items-center justify-center text-center group border border-emerald-400/30">
+                    <button id="btn-income-card" onclick="openModal('income')" class="btn-3d bg-gradient-to-br from-emerald-500 to-emerald-700 hover:from-emerald-600 hover:to-emerald-800 text-white p-6 rounded-3xl shadow-3d-emerald active:shadow-3d-emerald-active flex flex-col items-center justify-center text-center group border border-emerald-400/30">
                         <div class="w-16 h-16 rounded-2xl bg-white/20 backdrop-blur-sm flex items-center justify-center mb-3 group-hover:scale-110 transition-transform">
                             <i class="fa-solid fa-hand-holding-dollar text-3xl text-emerald-100"></i>
                         </div>
@@ -163,7 +159,7 @@
                     </button>
 
                     <!-- Button 2: Center Expense (സെന്റർ ചെലവ്) -->
-                    <button onclick="openModal('expense')" class="btn-3d bg-gradient-to-br from-rose-500 to-rose-700 hover:from-rose-600 hover:to-rose-800 text-white p-6 rounded-3xl shadow-3d-amber active:shadow-3d-amber-active flex flex-col items-center justify-center text-center group border border-rose-400/30">
+                    <button id="btn-expense-card" onclick="openModal('expense')" class="btn-3d bg-gradient-to-br from-rose-500 to-rose-700 hover:from-rose-600 hover:to-rose-800 text-white p-6 rounded-3xl shadow-3d-amber active:shadow-3d-amber-active flex flex-col items-center justify-center text-center group border border-rose-400/30">
                         <div class="w-16 h-16 rounded-2xl bg-white/20 backdrop-blur-sm flex items-center justify-center mb-3 group-hover:scale-110 transition-transform">
                             <i class="fa-solid fa-receipt text-3xl text-rose-100"></i>
                         </div>
@@ -213,7 +209,7 @@
                                     <th class="p-3 border border-emerald-700 w-32">തീയതി</th>
                                     <th class="p-3 border border-emerald-700">ഇനം (Item)</th>
                                     <th class="p-3 border border-emerald-700 text-right w-36">സംഖ്യ (₹)</th>
-                                    <th class="p-3 border border-emerald-700 text-center w-24">മാറ്റം</th>
+                                    <th id="th-income-action" class="p-3 border border-emerald-700 text-center w-24">മാറ്റം</th>
                                 </tr>
                             </thead>
                             <tbody id="income-table-body" class="divide-y divide-slate-200 text-sm font-malayalam">
@@ -240,7 +236,7 @@
                                     <th class="p-3 border border-rose-700 w-32">തീയതി</th>
                                     <th class="p-3 border border-rose-700">ഇനം (Item)</th>
                                     <th class="p-3 border border-rose-700 text-right w-36">സംഖ്യ (₹)</th>
-                                    <th class="p-3 border border-rose-700 text-center w-24">മാറ്റം</th>
+                                    <th id="th-expense-action" class="p-3 border border-rose-700 text-center w-24">മാറ്റം</th>
                                 </tr>
                             </thead>
                             <tbody id="expense-table-body" class="divide-y divide-slate-200 text-sm font-malayalam">
@@ -457,34 +453,57 @@
         // State variables
         let incomeData = JSON.parse(localStorage.getItem('wisdom_income')) || defaultIncomeData;
         let expenseData = JSON.parse(localStorage.getItem('wisdom_expense')) || defaultExpenseData;
-        let isAuthenticated = localStorage.getItem('wisdom_auth') === 'true';
+        let userRole = localStorage.getItem('wisdom_role') || ''; // 'admin' or 'member'
 
         // Check initial auth state on load
         window.addEventListener('DOMContentLoaded', () => {
-            if (isAuthenticated) {
+            if (userRole === 'admin' || userRole === 'member') {
                 document.getElementById('initial-auth-screen').classList.add('hidden');
                 document.getElementById('app').classList.remove('hidden');
+                applyRolePermissions();
             }
             renderAll();
         });
 
         function handleInitialLogin(e) {
             e.preventDefault();
-            const pass = document.getElementById('initial-password').value;
+            const pass = document.getElementById('initial-password').value.trim();
             if (pass === 'admin123') {
-                isAuthenticated = true;
-                localStorage.setItem('wisdom_auth', 'true');
+                userRole = 'admin';
+                localStorage.setItem('wisdom_role', 'admin');
                 document.getElementById('initial-auth-screen').classList.add('hidden');
                 document.getElementById('app').classList.remove('hidden');
+                applyRolePermissions();
                 showMsg('വിജയകരമാണ്', 'അഡ്മിൻ ലോഗിൻ വിജയകരമായി പൂർത്തിയായി!', 'success');
+            } else if (pass === '12345') {
+                userRole = 'member';
+                localStorage.setItem('wisdom_role', 'member');
+                document.getElementById('initial-auth-screen').classList.add('hidden');
+                document.getElementById('app').classList.remove('hidden');
+                applyRolePermissions();
+                showMsg('വിജയകരമാണ്', 'മെംബർ ലോഗിൻ വിജയകരമായി പൂർത്തിയായി!', 'success');
             } else {
-                showMsg('ശ്രദ്ധിക്കുക', 'തെറ്റായ പാസ്‌വേഡ്! (Default: admin123)', 'error');
+                showMsg('ശ്രദ്ധിക്കുക', 'തെറ്റായ പാസ്‌വേഡ് നൽകിയിരിക്കുന്നു!', 'error');
             }
         }
 
+        function applyRolePermissions() {
+            const roleBadge = document.getElementById('user-role-badge');
+            const actionSection = document.getElementById('action-buttons-section');
+            
+            if (userRole === 'admin') {
+                roleBadge.innerHTML = '<i class="fa-solid fa-shield-halved text-emerald-400"></i> അഡ്മിൻ ലോഗിൻ സജീവം';
+                actionSection.style.display = 'block';
+            } else {
+                roleBadge.innerHTML = '<i class="fa-solid fa-user text-cyan-300"></i> മെംബർ ലോഗിൻ (വ്യൂ ഒൺലി)';
+                actionSection.style.display = 'none'; // Hide income/expense add buttons for members
+            }
+            renderAll();
+        }
+
         function logoutApp() {
-            isAuthenticated = false;
-            localStorage.removeItem('wisdom_auth');
+            userRole = '';
+            localStorage.removeItem('wisdom_role');
             document.getElementById('initial-auth-screen').classList.remove('hidden');
             document.getElementById('app').classList.add('hidden');
             document.getElementById('initial-password').value = '';
@@ -501,6 +520,8 @@
             incomeData.sort((a, b) => new Date(a.date) - new Date(b.date));
             expenseData.sort((a, b) => new Date(a.date) - new Date(b.date));
 
+            const isAdmin = userRole === 'admin';
+
             // Render Income Table
             const incomeBody = document.getElementById('income-table-body');
             incomeBody.innerHTML = '';
@@ -514,14 +535,20 @@
                         <td class="p-3 border border-slate-200 font-medium text-slate-700">${formattedDate}</td>
                         <td class="p-3 border border-slate-200 text-slate-900 font-semibold">${item.item}</td>
                         <td class="p-3 border border-slate-200 text-right font-bold text-emerald-600">₹ ${item.amount.toLocaleString('en-IN')}</td>
-                        <td class="p-3 border border-slate-200 text-center">
+                        ${isAdmin ? `<td class="p-3 border border-slate-200 text-center">
                             <button onclick="deleteEntry('income', ${item.id})" class="w-8 h-8 rounded-lg bg-rose-50 hover:bg-rose-100 text-rose-600 transition flex items-center justify-center mx-auto" title="ഡിലീറ്റ് ചെയ്യുക">
                                 <i class="fa-solid fa-trash-can text-xs"></i>
                             </button>
-                        </td>
+                        </td>` : ''}
                     </tr>
                 `;
             });
+
+            // Toggle Action Column header for income/expense tables
+            const thIncomeAction = document.getElementById('th-income-action');
+            const thExpenseAction = document.getElementById('th-expense-action');
+            if (thIncomeAction) thIncomeAction.style.display = isAdmin ? 'table-cell' : 'none';
+            if (thExpenseAction) thExpenseAction.style.display = isAdmin ? 'table-cell' : 'none';
 
             // Render Expense Table
             const expenseBody = document.getElementById('expense-table-body');
@@ -536,11 +563,11 @@
                         <td class="p-3 border border-slate-200 font-medium text-slate-700">${formattedDate}</td>
                         <td class="p-3 border border-slate-200 text-slate-900 font-semibold">${item.item}</td>
                         <td class="p-3 border border-slate-200 text-right font-bold text-rose-600">₹ ${item.amount.toLocaleString('en-IN')}</td>
-                        <td class="p-3 border border-slate-200 text-center">
+                        ${isAdmin ? `<td class="p-3 border border-slate-200 text-center">
                             <button onclick="deleteEntry('expense', ${item.id})" class="w-8 h-8 rounded-lg bg-rose-50 hover:bg-rose-100 text-rose-600 transition flex items-center justify-center mx-auto" title="ഡിലീറ്റ് ചെയ്യുക">
                                 <i class="fa-solid fa-trash-can text-xs"></i>
                             </button>
-                        </td>
+                        </td>` : ''}
                     </tr>
                 `;
             });
@@ -619,6 +646,10 @@
         }
 
         function openModal(type) {
+            if (userRole !== 'admin') {
+                showMsg('അനുമതിയില്ല', 'മെംബർമാർക്ക് വിവരങ്ങൾ ചേർക്കാൻ അനുമതിയില്ല.', 'error');
+                return;
+            }
             document.getElementById('entry-type').value = type;
             const titleEl = document.getElementById('modal-title');
             const today = new Date().toISOString().split('T')[0];
@@ -641,6 +672,8 @@
 
         function handleFormSubmit(e) {
             e.preventDefault();
+            if (userRole !== 'admin') return;
+
             const type = document.getElementById('entry-type').value;
             const date = document.getElementById('entry-date').value;
             const item = document.getElementById('entry-item').value;
@@ -665,6 +698,7 @@
         }
 
         function deleteEntry(type, id) {
+            if (userRole !== 'admin') return;
             if (confirm('തീർച്ചയായും ഈ എൻട്രി ഡിലീറ്റ് ചെയ്യണമോ?')) {
                 if (type === 'income') {
                     incomeData = incomeData.filter(item => item.id !== id);
