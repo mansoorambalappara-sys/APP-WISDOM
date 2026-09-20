@@ -1,0 +1,710 @@
+<!DOCTYPE html>
+<html lang="ml" class="h-full">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>App Wisdom - വിസ്ഡം സെന്റർ അമ്പലപ്പാറ</title>
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- FontAwesome for Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Google Fonts: Anek Malayalam & Outfit -->
+    <link href="https://fonts.googleapis.com/css2?family=Anek+Malayalam:wght@400;500;600;700;800&family=Outfit:wght@400;600;700;800&display=swap" rel="stylesheet">
+    <!-- html2pdf.js for PDF Generation -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: {
+                        sans: ['"Anek Malayalam"', 'sans-serif'],
+                        heading: ['Outfit', '"Anek Malayalam"', 'sans-serif'],
+                        malayalam: ['"Anek Malayalam"', 'sans-serif']
+                    },
+                    boxShadow: {
+                        '3d-emerald': '0 6px 0 #047857, 0 10px 15px rgba(0,0,0,0.2)',
+                        '3d-emerald-active': '0 2px 0 #047857, 0 4px 6px rgba(0,0,0,0.2)',
+                        '3d-blue': '0 6px 0 #1d4ed8, 0 10px 15px rgba(0,0,0,0.2)',
+                        '3d-blue-active': '0 2px 0 #1d4ed8, 0 4px 6px rgba(0,0,0,0.2)',
+                        '3d-amber': '0 6px 0 #b45309, 0 10px 15px rgba(0,0,0,0.2)',
+                        '3d-amber-active': '0 2px 0 #b45309, 0 4px 6px rgba(0,0,0,0.2)',
+                        'card': '0 10px 25px -5px rgba(0, 0, 0, 0.05), 0 8px 10px -6px rgba(0, 0, 0, 0.05)'
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        .btn-3d {
+            transition: all 0.1s ease;
+        }
+        .btn-3d:active {
+            transform: translateY(4px);
+        }
+        body, *, html {
+            font-family: 'Anek Malayalam', sans-serif !important;
+        }
+        /* A4 styling for PDF container */
+        @media print {
+            body {
+                background: white !important;
+            }
+            .no-print {
+                display: none !important;
+            }
+            #pdf-printable-area {
+                box-shadow: none !important;
+                border: none !important;
+                padding: 10mm !important;
+                margin: 0 !important;
+                width: 100% !important;
+            }
+        }
+    </style>
+</head>
+<body class="h-full bg-slate-50 text-slate-800 antialiased selection:bg-emerald-500 selection:text-white">
+
+    <div id="initial-auth-screen" class="fixed inset-0 bg-slate-900/90 backdrop-blur-md z-50 flex items-center justify-center p-4">
+        <div class="bg-white rounded-3xl max-w-md w-full p-8 shadow-2xl border border-slate-100 relative">
+            <div class="text-center mb-6">
+                <div class="w-16 h-16 rounded-2xl bg-emerald-100 text-emerald-600 flex items-center justify-center mx-auto mb-3 text-3xl shadow-inner">
+                    <i class="fa-solid fa-wallet"></i>
+                </div>
+                <h1 class="text-2xl font-extrabold text-slate-900 font-malayalam">App Wisdom</h1>
+                <p class="text-xs text-emerald-700 font-bold mt-0.5 font-malayalam">വിസ്ഡം സെന്റർ അമ്പലപ്പാറ</p>
+                <p class="text-xs text-slate-500 mt-2 font-malayalam">തുടരാൻ അഡ്മിൻ പാസ്‌വേഡ് നൽകുക (admin123)</p>
+            </div>
+            <form onsubmit="handleInitialLogin(event)" class="space-y-4">
+                <div>
+                    <label class="block text-xs font-bold uppercase text-slate-600 mb-1 font-malayalam">പാസ്‌വേഡ് (Password)</label>
+                    <input type="password" id="initial-password" placeholder="പാസ്‌വേഡ് നൽകുക" required class="w-full px-4 py-3 rounded-xl border border-slate-300 focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 outline-none text-sm font-malayalam">
+                </div>
+                <button type="submit" class="w-full py-3.5 rounded-xl bg-emerald-600 hover:bg-emerald-700 text-white font-bold text-sm shadow-lg shadow-emerald-600/30 transition font-malayalam">
+                    ലോഗിൻ ചെയ്യുക (Login)
+                </button>
+            </form>
+            <p class="text-center text-[11px] text-slate-400 mt-6 font-malayalam">Default Password: admin123</p>
+        </div>
+    </div>
+
+    <div id="app" class="min-h-full flex flex-col hidden">
+        
+        <!-- Header - Centered title as requested -->
+        <header class="bg-gradient-to-r from-emerald-700 via-teal-700 to-cyan-800 text-white shadow-xl sticky top-0 z-40">
+            <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-5 flex flex-col md:flex-row justify-between items-center gap-4 text-center md:text-left">
+                <div class="flex items-center space-x-3 rtl:space-x-reverse mx-auto md:mx-0">
+                    <div class="w-12 h-12 rounded-2xl bg-white/10 backdrop-blur-md flex items-center justify-center border border-white/20 shadow-inner">
+                        <i class="fa-solid fa-wallet text-2xl text-emerald-300"></i>
+                    </div>
+                    <div>
+                        <h1 class="text-3xl font-extrabold tracking-wide font-malayalam text-center md:text-left">App Wisdom</h1>
+                        <p class="text-sm text-emerald-200 font-bold font-malayalam tracking-wide text-center md:text-left">വിസ്ഡം സെന്റർ അമ്പലപ്പാറ</p>
+                    </div>
+                </div>
+                
+                <div class="flex items-center gap-3">
+                    <div class="flex items-center gap-2 bg-emerald-900/60 px-3.5 py-1.5 rounded-full border border-emerald-500/30 text-xs font-bold text-emerald-200 font-malayalam">
+                        <i class="fa-solid fa-shield-halved text-emerald-400"></i> അഡ്മിൻ ലോഗിൻ സജീവം
+                    </div>
+                    <button onclick="logoutApp()" class="px-4 py-2 rounded-xl bg-white/10 hover:bg-white/20 text-white font-bold text-sm border border-white/20 backdrop-blur-sm transition flex items-center gap-2 shadow-sm font-malayalam">
+                        <i class="fa-solid fa-lock-open"></i> ലോഗ്ഔട്ട്
+                    </button>
+                </div>
+            </div>
+        </header>
+
+        <main class="flex-grow max-w-7xl w-full mx-auto px-4 sm:px-6 lg:px-8 py-8">
+            
+            <!-- Summary Stat Cards -->
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
+                <!-- Total Income Card -->
+                <div class="bg-white rounded-3xl p-6 shadow-card border border-emerald-100 relative overflow-hidden group hover:shadow-xl transition-all">
+                    <div class="absolute -right-6 -bottom-6 w-28 h-28 bg-emerald-50 rounded-full group-hover:scale-125 transition-transform duration-300 flex items-center justify-center">
+                        <i class="fa-solid fa-arrow-trend-up text-4xl text-emerald-200"></i>
+                    </div>
+                    <p class="text-xs font-bold uppercase tracking-wider text-emerald-600 mb-1 font-malayalam"><i class="fa-solid fa-circle-plus"></i> ആകെ വരവ് (Total Income)</p>
+                    <h3 id="total-income-display" class="text-3xl font-extrabold text-slate-900">₹ 0</h3>
+                    <p class="text-xs text-slate-500 mt-2 font-malayalam">01.04.2026 മുതൽ ഉള്ള കണക്ക്</p>
+                </div>
+
+                <!-- Total Expense Card -->
+                <div class="bg-white rounded-3xl p-6 shadow-card border border-rose-100 relative overflow-hidden group hover:shadow-xl transition-all">
+                    <div class="absolute -right-6 -bottom-6 w-28 h-28 bg-rose-50 rounded-full group-hover:scale-125 transition-transform duration-300 flex items-center justify-center">
+                        <i class="fa-solid fa-arrow-trend-down text-4xl text-rose-200"></i>
+                    </div>
+                    <p class="text-xs font-bold uppercase tracking-wider text-rose-600 mb-1 font-malayalam"><i class="fa-solid fa-circle-minus"></i> ആകെ ചെലവ് (Total Expense)</p>
+                    <h3 id="total-expense-display" class="text-3xl font-extrabold text-slate-900">₹ 0</h3>
+                    <p class="text-xs text-slate-500 mt-2 font-malayalam">01.04.2026 മുതൽ ഉള്ള കണക്ക്</p>
+                </div>
+
+                <!-- Balance Card -->
+                <div class="bg-white rounded-3xl p-6 shadow-card border border-cyan-100 relative overflow-hidden group hover:shadow-xl transition-all">
+                    <div class="absolute -right-6 -bottom-6 w-28 h-28 bg-cyan-50 rounded-full group-hover:scale-125 transition-transform duration-300 flex items-center justify-center">
+                        <i class="fa-solid fa-vault text-4xl text-cyan-200"></i>
+                    </div>
+                    <p class="text-xs font-bold uppercase tracking-wider text-cyan-600 mb-1 font-malayalam"><i class="fa-solid fa-scale-balanced"></i> ബാക്കി ബാലൻസ് (Balance)</p>
+                    <h3 id="total-balance-display" class="text-3xl font-extrabold text-slate-900">₹ 0</h3>
+                    <p class="text-xs text-slate-500 mt-2 font-malayalam">കയ്യിലുള്ള ബാക്കി തുക</p>
+                </div>
+            </div>
+
+            <div class="mb-10">
+                <h2 class="text-lg font-bold text-slate-800 mb-4 flex items-center gap-2 text-center justify-center font-malayalam">
+                    <i class="fa-solid fa-grip text-emerald-600"></i> വരവ് ചെലവ് കണക്കുകൾ
+                </h2>
+                <div class="grid grid-cols-1 sm:grid-cols-3 gap-6">
+                    <!-- Button 1: Center Income (സെന്റർ വരവ്) -->
+                    <button onclick="openModal('income')" class="btn-3d bg-gradient-to-br from-emerald-500 to-emerald-700 hover:from-emerald-600 hover:to-emerald-800 text-white p-6 rounded-3xl shadow-3d-emerald active:shadow-3d-emerald-active flex flex-col items-center justify-center text-center group border border-emerald-400/30">
+                        <div class="w-16 h-16 rounded-2xl bg-white/20 backdrop-blur-sm flex items-center justify-center mb-3 group-hover:scale-110 transition-transform">
+                            <i class="fa-solid fa-hand-holding-dollar text-3xl text-emerald-100"></i>
+                        </div>
+                        <span class="text-xl font-bold tracking-wide font-malayalam">സെന്റർ വരവ് (Income)</span>
+                        <span class="text-xs text-emerald-100 mt-1 font-medium font-malayalam">പുതിയ വരവ് തുക ചേർക്കാം</span>
+                    </button>
+
+                    <!-- Button 2: Center Expense (സെന്റർ ചെലവ്) -->
+                    <button onclick="openModal('expense')" class="btn-3d bg-gradient-to-br from-rose-500 to-rose-700 hover:from-rose-600 hover:to-rose-800 text-white p-6 rounded-3xl shadow-3d-amber active:shadow-3d-amber-active flex flex-col items-center justify-center text-center group border border-rose-400/30">
+                        <div class="w-16 h-16 rounded-2xl bg-white/20 backdrop-blur-sm flex items-center justify-center mb-3 group-hover:scale-110 transition-transform">
+                            <i class="fa-solid fa-receipt text-3xl text-rose-100"></i>
+                        </div>
+                        <span class="text-xl font-bold tracking-wide font-malayalam">സെന്റർ ചെലവ് (Expense)</span>
+                        <span class="text-xs text-rose-100 mt-1 font-medium font-malayalam">പുതിയ ചെലവ് തുക ചേർക്കാം</span>
+                    </button>
+
+                    <!-- Button 3: Report (റിപ്പോർട്ട്) -->
+                    <button onclick="switchTab('report')" class="btn-3d bg-gradient-to-br from-indigo-600 to-blue-700 hover:from-indigo-700 hover:to-blue-800 text-white p-6 rounded-3xl shadow-3d-blue active:shadow-3d-blue-active flex flex-col items-center justify-center text-center group border border-indigo-400/30">
+                        <div class="w-16 h-16 rounded-2xl bg-white/20 backdrop-blur-sm flex items-center justify-center mb-3 group-hover:scale-110 transition-transform">
+                            <i class="fa-solid fa-file-lines text-3xl text-indigo-100"></i>
+                        </div>
+                        <span class="text-xl font-bold tracking-wide font-malayalam">റിപ്പോർട്ട് (Report)</span>
+                        <span class="text-xs text-indigo-100 mt-1 font-medium font-malayalam">PDF ഡൗൺലോഡ് & ലിസ്റ്റ്</span>
+                    </button>
+                </div>
+            </div>
+
+            <div class="bg-white rounded-3xl shadow-card border border-slate-200 overflow-hidden mb-12">
+                <!-- Tab Headers -->
+                <div class="flex border-b border-slate-200 bg-slate-50 overflow-x-auto">
+                    <button onclick="switchTab('income')" id="tab-btn-income" class="px-6 py-4 font-bold text-sm border-b-2 border-emerald-600 text-emerald-700 bg-white flex items-center gap-2 transition whitespace-nowrap font-malayalam">
+                        <i class="fa-solid fa-arrow-down-long text-emerald-600"></i> വരവ് പട്ടിക (Income List)
+                    </button>
+                    <button onclick="switchTab('expense')" id="tab-btn-expense" class="px-6 py-4 font-bold text-sm border-b-2 border-transparent text-slate-500 hover:text-slate-800 flex items-center gap-2 transition whitespace-nowrap font-malayalam">
+                        <i class="fa-solid fa-arrow-up-long text-rose-600"></i> ചെലവ് പട്ടിക (Expense List)
+                    </button>
+                    <button onclick="switchTab('report')" id="tab-btn-report" class="px-6 py-4 font-bold text-sm border-b-2 border-transparent text-slate-500 hover:text-slate-800 flex items-center gap-2 transition whitespace-nowrap font-malayalam">
+                        <i class="fa-solid fa-print text-indigo-600"></i> റിപ്പോർട്ട് & PDF (Reports)
+                    </button>
+                </div>
+
+                <!-- Tab 1: Income Table View -->
+                <div id="tab-content-income" class="p-6">
+                    <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 mb-6">
+                        <div>
+                            <h3 class="text-xl font-bold text-slate-900 font-malayalam">വരവ് വിവരങ്ങൾ (Income Entries)</h3>
+                            <p class="text-xs text-slate-500 font-malayalam">റമദാൻ കളക്ഷൻ, ബക്കറ്റ് കളക്ഷൻ, വരിസംഖ്യ തുടങ്ങിയവ</p>
+                        </div>
+                    </div>
+
+                    <div class="overflow-x-auto">
+                        <table class="w-full text-left border-collapse border border-slate-300">
+                            <thead>
+                                <tr class="bg-emerald-800 text-white uppercase text-xs tracking-wider font-malayalam">
+                                    <th class="p-3 border border-emerald-700 w-16 text-center">നമ്പർ</th>
+                                    <th class="p-3 border border-emerald-700 w-32">തീയതി</th>
+                                    <th class="p-3 border border-emerald-700">ഇനം (Item)</th>
+                                    <th class="p-3 border border-emerald-700 text-right w-36">സംഖ്യ (₹)</th>
+                                    <th class="p-3 border border-emerald-700 text-center w-24">മാറ്റം</th>
+                                </tr>
+                            </thead>
+                            <tbody id="income-table-body" class="divide-y divide-slate-200 text-sm font-malayalam">
+                                <!-- Populated dynamically -->
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+
+                <!-- Tab 2: Expense Table View -->
+                <div id="tab-content-expense" class="p-6 hidden">
+                    <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 mb-6">
+                        <div>
+                            <h3 class="text-xl font-bold text-slate-900 font-malayalam">ചെലവ് വിവരങ്ങൾ (Expense Entries)</h3>
+                            <p class="text-xs text-slate-500 font-malayalam">കറന്റ് ബിൽ, ശമ്പളം, മറ്റ് ചെലവുകൾ</p>
+                        </div>
+                    </div>
+
+                    <div class="overflow-x-auto">
+                        <table class="w-full text-left border-collapse border border-slate-300">
+                            <thead>
+                                <tr class="bg-rose-800 text-white uppercase text-xs tracking-wider font-malayalam">
+                                    <th class="p-3 border border-rose-700 w-16 text-center">നമ്പർ</th>
+                                    <th class="p-3 border border-rose-700 w-32">തീയതി</th>
+                                    <th class="p-3 border border-rose-700">ഇനം (Item)</th>
+                                    <th class="p-3 border border-rose-700 text-right w-36">സംഖ്യ (₹)</th>
+                                    <th class="p-3 border border-rose-700 text-center w-24">മാറ്റം</th>
+                                </tr>
+                            </thead>
+                            <tbody id="expense-table-body" class="divide-y divide-slate-200 text-sm font-malayalam">
+                                <!-- Populated dynamically -->
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+
+                <!-- Tab 3: Official A4 Report View -->
+                <div id="tab-content-report" class="p-6 hidden">
+                    <div class="flex flex-col sm:flex-row justify-between items-center gap-4 mb-6 no-print bg-indigo-50 p-4 rounded-2xl border border-indigo-100">
+                        <div>
+                            <h3 class="text-lg font-bold text-indigo-900 font-malayalam"><i class="fa-solid fa-file-pdf"></i> ഔദ്യോഗിക റിപ്പോർട്ട് (Official Report)</h3>
+                            <p class="text-xs text-indigo-700 font-malayalam">എ ഫോർ സൈസിൽ ഗ്രീഡ് കോളങ്ങളോട് കൂടി പ്രിന്റ് ചെയ്യാനും പിഡിഎഫ് ഡൗൺലോഡ് ചെയ്യാനും സാധിക്കും</p>
+                        </div>
+                        <button onclick="downloadPDF()" class="px-6 py-3 bg-indigo-600 hover:bg-indigo-700 text-white font-bold rounded-xl shadow-lg shadow-indigo-600/30 flex items-center gap-2 transition font-malayalam">
+                            <i class="fa-solid fa-download"></i> PDF ഡൗൺലോഡ് ചെയ്യുക
+                        </button>
+                    </div>
+
+                    <!-- Printable A4 Document Container -->
+                    <div id="pdf-printable-area" class="bg-white p-8 rounded-2xl border border-slate-200 shadow-sm max-w-4xl mx-auto font-malayalam">
+                        <div class="text-center border-b-2 border-slate-800 pb-6 mb-6">
+                            <h2 class="text-2xl font-extrabold text-slate-900 font-malayalam">വിസ്ഡം സെന്റർ അമ്പലപ്പാറ</h2>
+                            <h3 class="text-lg font-bold text-slate-700 mt-1 font-malayalam">വരവ് ചെലവ് റിപ്പോർട്ട് - 2026</h3>
+                            <p class="text-xs text-slate-600 font-semibold mt-1 font-malayalam">(01.04.2026 മുതൽ)</p>
+                            <p class="text-[11px] text-slate-400 mt-1">Updated on 16.09.2026</p>
+                        </div>
+
+                        <!-- Income Section in Report -->
+                        <div class="mb-8">
+                            <h4 class="text-base font-bold text-emerald-800 bg-emerald-50 px-4 py-2 rounded-lg border border-emerald-200 mb-3 font-malayalam">
+                                <i class="fa-solid fa-arrow-down"></i> വരവ് (Income)
+                            </h4>
+                            <table class="w-full text-left border-collapse border border-slate-400 text-xs">
+                                <thead>
+                                    <tr class="bg-emerald-800 text-white font-bold">
+                                        <th class="p-2.5 border border-emerald-700 w-16 text-center">നമ്പർ</th>
+                                        <th class="p-2.5 border border-emerald-700 w-28 text-center">തീയതി</th>
+                                        <th class="p-2.5 border border-emerald-700">ഇനം (Item)</th>
+                                        <th class="p-2.5 border border-emerald-700 text-right w-32">സംഖ്യ (₹)</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="report-income-tbody" class="divide-y divide-slate-300">
+                                    <!-- Dynamic -->
+                                </tbody>
+                                <tfoot>
+                                    <tr class="bg-emerald-100 font-bold text-emerald-900">
+                                        <td colspan="3" class="p-2.5 border border-emerald-300 text-right font-malayalam">ആകെ വരവ്</td>
+                                        <td id="report-total-income" class="p-2.5 border border-emerald-300 text-right font-malayalam">₹ 0</td>
+                                    </tr>
+                                </tfoot>
+                            </table>
+                        </div>
+
+                        <!-- Expense Section in Report -->
+                        <div class="mb-8">
+                            <h4 class="text-base font-bold text-rose-800 bg-rose-50 px-4 py-2 rounded-lg border border-rose-200 mb-3 font-malayalam">
+                                <i class="fa-solid fa-arrow-up"></i> ചെലവ് (Expense)
+                            </h4>
+                            <table class="w-full text-left border-collapse border border-slate-400 text-xs">
+                                <thead>
+                                    <tr class="bg-rose-800 text-white font-bold">
+                                        <th class="p-2.5 border border-rose-700 w-16 text-center">നമ്പർ</th>
+                                        <th class="p-2.5 border border-rose-700 w-28 text-center">തീയതി</th>
+                                        <th class="p-2.5 border border-rose-700">ഇനം (Item)</th>
+                                        <th class="p-2.5 border border-rose-700 text-right w-32">സംഖ്യ (₹)</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="report-expense-tbody" class="divide-y divide-slate-300">
+                                    <!-- Dynamic -->
+                                </tbody>
+                                <tfoot>
+                                    <tr class="bg-rose-100 font-bold text-rose-900">
+                                        <td colspan="3" class="p-2.5 border border-rose-300 text-right font-malayalam">ആകെ ചെലവ്</td>
+                                        <td id="report-total-expense" class="p-2.5 border border-rose-300 text-right font-malayalam">₹ 0</td>
+                                    </tr>
+                                </tfoot>
+                            </table>
+                        </div>
+
+                        <!-- Final Summary Box -->
+                        <div class="bg-slate-50 border-2 border-slate-800 rounded-xl p-4 mt-6">
+                            <h4 class="text-sm font-extrabold text-slate-800 border-b border-slate-300 pb-2 mb-3 font-malayalam">സംഗ്രഹം (Summary)</h4>
+                            <div class="grid grid-cols-1 sm:grid-cols-3 gap-4 text-sm font-bold">
+                                <div class="bg-white p-3 rounded-lg border border-emerald-200 text-center">
+                                    <span class="block text-xs text-emerald-700 font-malayalam">ആകെ വരവ്</span>
+                                    <span id="summary-box-income" class="text-lg text-slate-900 font-malayalam">₹ 0</span>
+                                </div>
+                                <div class="bg-white p-3 rounded-lg border border-rose-200 text-center">
+                                    <span class="block text-xs text-rose-700 font-malayalam">ആകെ ചെലവ്</span>
+                                    <span id="summary-box-expense" class="text-lg text-slate-900 font-malayalam">₹ 0</span>
+                                </div>
+                                <div class="bg-white p-3 rounded-lg border border-cyan-200 text-center">
+                                    <span class="block text-xs text-cyan-700 font-malayalam">ബാക്കി ബാലൻസ്</span>
+                                    <span id="summary-box-balance" class="text-lg text-slate-900 font-malayalam">₹ 0</span>
+                                </div>
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+
+            </div>
+        </main>
+    </div>
+
+    <div id="entry-modal" class="fixed inset-0 bg-slate-900/60 backdrop-blur-sm z-50 flex items-center justify-center p-4 hidden">
+        <div class="bg-white rounded-3xl max-w-lg w-full p-8 shadow-2xl border border-slate-100 transform transition-all">
+            <div class="flex justify-between items-center mb-6 border-b border-slate-100 pb-4">
+                <h3 id="modal-title" class="text-xl font-bold text-slate-900 font-malayalam">പുതിയ എൻട്രി ചേർക്കുക</h3>
+                <button onclick="closeModal()" class="w-10 h-10 rounded-full bg-slate-100 hover:bg-slate-200 text-slate-600 flex items-center justify-center transition">
+                    <i class="fa-solid fa-xmark"></i>
+                </button>
+            </div>
+            
+            <form onsubmit="handleFormSubmit(event)" class="space-y-4">
+                <input type="hidden" id="entry-type" value="income">
+                <div>
+                    <label class="block text-xs font-bold uppercase text-slate-600 mb-1 font-malayalam">തീയതി (Date)</label>
+                    <input type="date" id="entry-date" required class="w-full px-4 py-3 rounded-xl border border-slate-300 focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 outline-none text-sm font-malayalam">
+                </div>
+                <div>
+                    <label class="block text-xs font-bold uppercase text-slate-600 mb-1 font-malayalam">ഇനം / വിവരണം (Item Description)</label>
+                    <input type="text" id="entry-item" placeholder="ഉദാ: ബക്കറ്റ് കളക്ഷൻ / കറന്റ് ബിൽ" required class="w-full px-4 py-3 rounded-xl border border-slate-300 focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 outline-none text-sm font-malayalam">
+                </div>
+                <div>
+                    <label class="block text-xs font-bold uppercase text-slate-600 mb-1 font-malayalam">സംഖ്യ (Amount in ₹)</label>
+                    <input type="number" id="entry-amount" placeholder="0" required min="1" class="w-full px-4 py-3 rounded-xl border border-slate-300 focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 outline-none text-sm font-malayalam">
+                </div>
+                
+                <div class="pt-4 flex gap-3">
+                    <button type="button" onclick="closeModal()" class="flex-1 py-3.5 rounded-xl bg-slate-100 hover:bg-slate-200 text-slate-700 font-bold text-sm transition font-malayalam">
+                        റദ്ദാക്കുക (Cancel)
+                    </button>
+                    <button type="submit" class="flex-1 py-3.5 rounded-xl bg-emerald-600 hover:bg-emerald-700 text-white font-bold text-sm shadow-lg shadow-emerald-600/30 transition font-malayalam">
+                        സേവ് ചെയ്യുക (Save)
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Custom Message Modal (Replacing alert) -->
+    <div id="message-modal" class="fixed inset-0 bg-slate-900/60 backdrop-blur-sm z-50 flex items-center justify-center p-4 hidden">
+        <div class="bg-white rounded-3xl max-w-sm w-full p-6 shadow-2xl text-center">
+            <div id="msg-icon" class="w-14 h-14 rounded-2xl bg-emerald-100 text-emerald-600 flex items-center justify-center mx-auto mb-3 text-2xl">
+                <i class="fa-solid fa-check"></i>
+            </div>
+            <h4 id="msg-title" class="text-lg font-bold text-slate-900 mb-1 font-malayalam">വിജയകരമാണ്</h4>
+            <p id="msg-text" class="text-xs text-slate-600 mb-6 font-malayalam">നടപടി വിജയകരമായി പൂർത്തിയായി.</p>
+            <button onclick="closeMessageModal()" class="w-full py-3 rounded-xl bg-emerald-600 hover:bg-emerald-700 text-white font-bold text-sm shadow-md font-malayalam">
+                ശരി (OK)
+            </button>
+        </div>
+    </div>
+
+    <script>
+        // Pre-populated data extracted accurately from the official PDF
+        const defaultIncomeData = [
+            { id: 1, date: "2026-04-01", item: "മുൻ നീക്കിയിരിപ്പ്", amount: 102 },
+            { id: 2, date: "2026-04-05", item: "റമദാൻ കളക്ഷൻ", amount: 32470 },
+            { id: 3, date: "2026-04-08", item: "ബക്കറ്റ് കളക്ഷൻ 08.04.26", amount: 134 },
+            { id: 4, date: "2026-04-15", item: "ബക്കറ്റ് കളക്ഷൻ 15.04.26", amount: 275 },
+            { id: 5, date: "2026-04-22", item: "ബക്കറ്റ് കളക്ഷൻ 22.04.26", amount: 230 },
+            { id: 6, date: "2026-04-29", item: "ബക്കറ്റ് കളക്ഷൻ 29.04.26", amount: 254 },
+            { id: 7, date: "2026-05-06", item: "ബക്കറ്റ് കളക്ഷൻ 06.05.26", amount: 215 },
+            { id: 8, date: "2026-05-13", item: "ബക്കറ്റ് കളക്ഷൻ 13.05.26", amount: 320 },
+            { id: 9, date: "2026-04-30", item: "ഏപ്രിൽ മാസം വരിസംഖ്യ", amount: 2250 },
+            { id: 10, date: "2026-05-20", item: "ബക്കറ്റ് കളക്ഷൻ 20.05.26", amount: 250 },
+            { id: 11, date: "2026-06-10", item: "ബക്കറ്റ് കളക്ഷൻ 10.06.26", amount: 150 },
+            { id: 12, date: "2026-06-24", item: "ബക്കറ്റ് കളക്ഷൻ 24.06.26", amount: 65 },
+            { id: 13, date: "2026-07-01", item: "ബക്കറ്റ് കളക്ഷൻ 01.07.26", amount: 280 },
+            { id: 14, date: "2026-07-15", item: "ബക്കറ്റ് കളക്ഷൻ 15.07.26", amount: 205 },
+            { id: 15, date: "2026-07-22", item: "ബക്കറ്റ് കളക്ഷൻ 22.07.26", amount: 115 },
+            { id: 16, date: "2026-07-29", item: "ബക്കറ്റ് കളക്ഷൻ 29.07.26", amount: 130 },
+            { id: 17, date: "2026-05-31", item: "മെയ് മാസം വരിസംഖ്യ", amount: 1850 },
+            { id: 18, date: "2026-08-05", item: "ബക്കറ്റ് കളക്ഷൻ 05.08.26", amount: 307 },
+            { id: 19, date: "2026-08-12", item: "ബക്കറ്റ് കളക്ഷൻ 12.08.26", amount: 215 },
+            { id: 20, date: "2026-08-19", item: "ബക്കറ്റ് കളക്ഷൻ 19.08.26", amount: 225 },
+            { id: 21, date: "2026-09-02", item: "ബക്കറ്റ് കളക്ഷൻ 02.09.26", amount: 195 },
+            { id: 22, date: "2026-09-16", item: "ബക്കറ്റ് കളക്ഷൻ 16.09.26", amount: 205 },
+            { id: 23, date: "2026-07-31", item: "ജൂൺ, ജൂലൈ മാസം വരിസംഖ്യ", amount: 2700 }
+        ];
+
+        const defaultExpenseData = [
+            { id: 1, date: "2026-04-01", item: "ബാബുവിന് കൊടുത്തത്", amount: 15000 },
+            { id: 2, date: "2026-03-26", item: "കറന്റ് ബിൽ (26.03.26)", amount: 454 },
+            { id: 3, date: "2026-04-08", item: "ഫിറോസ് സ്വലാഹി 08.04.26", amount: 700 },
+            { id: 4, date: "2026-04-15", item: "ഫിറോസ് സ്വലാഹി 15.04.26", amount: 700 },
+            { id: 5, date: "2026-04-22", item: "അഷ്ക്കർ സലഫി 22.04.26", amount: 800 },
+            { id: 6, date: "2026-04-29", item: "ഫിറോസ് സ്വലാഹി 29.04.26", amount: 700 },
+            { id: 7, date: "2026-05-06", item: "ഫിറോസ് സ്വലാഹി 06.05.26", amount: 700 },
+            { id: 8, date: "2026-05-10", item: "മിക്സർ, കോളർ മൈക്ക് വാങ്ങിയത്", amount: 5270 },
+            { id: 9, date: "2026-05-13", item: "ഫിറോസ് സ്വലാഹി 13.05.26", amount: 700 },
+            { id: 10, date: "2026-05-20", item: "ഫിറോസ് സ്വലാഹി 20.05.26", amount: 700 },
+            { id: 11, date: "2026-05-28", item: "കറന്റ് ബിൽ (28.05.26)", amount: 380 },
+            { id: 12, date: "2026-06-10", item: "ഫിറോസ് സ്വലാഹി 10.06.26", amount: 700 },
+            { id: 13, date: "2026-06-24", item: "ഫിറോസ് സ്വലാഹി 24.06.26", amount: 700 },
+            { id: 14, date: "2026-07-01", item: "ഫിറോസ് സ്വലാഹി 01.07.26", amount: 700 },
+            { id: 15, date: "2026-07-15", item: "ഫിറോസ് സ്വലാഹി 15.07.26", amount: 700 },
+            { id: 16, date: "2026-07-22", item: "ഫിറോസ് സ്വലാഹി 22.07.26", amount: 700 },
+            { id: 17, date: "2026-07-29", item: "ഫിറോസ് സ്വലാഹി 29.07.26", amount: 700 },
+            { id: 18, date: "2026-08-04", item: "കറന്റ് ബിൽ (04.08.26)", amount: 427 },
+            { id: 19, date: "2026-08-05", item: "ഫിറോസ് സ്വലാഹി 05.08.26", amount: 700 },
+            { id: 20, date: "2026-08-12", item: "ഫിറോസ് സ്വലാഹി 12.08.26", amount: 700 },
+            { id: 21, date: "2026-08-19", item: "ഫിറോസ് സ്വലാഹി 19.08.26", amount: 800 },
+            { id: 22, date: "2026-08-25", item: "ഫ്ലക്സ് അടിച്ചത്", amount: 270 },
+            { id: 23, date: "2026-09-02", item: "ഫിറോസ് സ്വലാഹി 02.09.26", amount: 700 },
+            { id: 24, date: "2026-09-16", item: "ഫിറോസ് സ്വലാഹി 16.09.26", amount: 700 }
+        ];
+
+        // State variables
+        let incomeData = JSON.parse(localStorage.getItem('wisdom_income')) || defaultIncomeData;
+        let expenseData = JSON.parse(localStorage.getItem('wisdom_expense')) || defaultExpenseData;
+        let isAuthenticated = localStorage.getItem('wisdom_auth') === 'true';
+
+        // Check initial auth state on load
+        window.addEventListener('DOMContentLoaded', () => {
+            if (isAuthenticated) {
+                document.getElementById('initial-auth-screen').classList.add('hidden');
+                document.getElementById('app').classList.remove('hidden');
+            }
+            renderAll();
+        });
+
+        function handleInitialLogin(e) {
+            e.preventDefault();
+            const pass = document.getElementById('initial-password').value;
+            if (pass === 'admin123') {
+                isAuthenticated = true;
+                localStorage.setItem('wisdom_auth', 'true');
+                document.getElementById('initial-auth-screen').classList.add('hidden');
+                document.getElementById('app').classList.remove('hidden');
+                showMsg('വിജയകരമാണ്', 'അഡ്മിൻ ലോഗിൻ വിജയകരമായി പൂർത്തിയായി!', 'success');
+            } else {
+                showMsg('ശ്രദ്ധിക്കുക', 'തെറ്റായ പാസ്‌വേഡ്! (Default: admin123)', 'error');
+            }
+        }
+
+        function logoutApp() {
+            isAuthenticated = false;
+            localStorage.removeItem('wisdom_auth');
+            document.getElementById('initial-auth-screen').classList.remove('hidden');
+            document.getElementById('app').classList.add('hidden');
+            document.getElementById('initial-password').value = '';
+        }
+
+        function saveData() {
+            localStorage.setItem('wisdom_income', JSON.stringify(incomeData));
+            localStorage.setItem('wisdom_expense', JSON.stringify(expenseData));
+            renderAll();
+        }
+
+        function renderAll() {
+            // Sort by date ascending
+            incomeData.sort((a, b) => new Date(a.date) - new Date(b.date));
+            expenseData.sort((a, b) => new Date(a.date) - new Date(b.date));
+
+            // Render Income Table
+            const incomeBody = document.getElementById('income-table-body');
+            incomeBody.innerHTML = '';
+            let totalIncome = 0;
+            incomeData.forEach((item, index) => {
+                totalIncome += Number(item.amount);
+                const formattedDate = formatDate(item.date);
+                incomeBody.innerHTML += `
+                    <tr class="hover:bg-slate-50 transition">
+                        <td class="p-3 border border-slate-200 text-center font-bold text-slate-500">${index + 1}</td>
+                        <td class="p-3 border border-slate-200 font-medium text-slate-700">${formattedDate}</td>
+                        <td class="p-3 border border-slate-200 text-slate-900 font-semibold">${item.item}</td>
+                        <td class="p-3 border border-slate-200 text-right font-bold text-emerald-600">₹ ${item.amount.toLocaleString('en-IN')}</td>
+                        <td class="p-3 border border-slate-200 text-center">
+                            <button onclick="deleteEntry('income', ${item.id})" class="w-8 h-8 rounded-lg bg-rose-50 hover:bg-rose-100 text-rose-600 transition flex items-center justify-center mx-auto" title="ഡിലീറ്റ് ചെയ്യുക">
+                                <i class="fa-solid fa-trash-can text-xs"></i>
+                            </button>
+                        </td>
+                    </tr>
+                `;
+            });
+
+            // Render Expense Table
+            const expenseBody = document.getElementById('expense-table-body');
+            expenseBody.innerHTML = '';
+            let totalExpense = 0;
+            expenseData.forEach((item, index) => {
+                totalExpense += Number(item.amount);
+                const formattedDate = formatDate(item.date);
+                expenseBody.innerHTML += `
+                    <tr class="hover:bg-slate-50 transition">
+                        <td class="p-3 border border-slate-200 text-center font-bold text-slate-500">${index + 1}</td>
+                        <td class="p-3 border border-slate-200 font-medium text-slate-700">${formattedDate}</td>
+                        <td class="p-3 border border-slate-200 text-slate-900 font-semibold">${item.item}</td>
+                        <td class="p-3 border border-slate-200 text-right font-bold text-rose-600">₹ ${item.amount.toLocaleString('en-IN')}</td>
+                        <td class="p-3 border border-slate-200 text-center">
+                            <button onclick="deleteEntry('expense', ${item.id})" class="w-8 h-8 rounded-lg bg-rose-50 hover:bg-rose-100 text-rose-600 transition flex items-center justify-center mx-auto" title="ഡിലീറ്റ് ചെയ്യുക">
+                                <i class="fa-solid fa-trash-can text-xs"></i>
+                            </button>
+                        </td>
+                    </tr>
+                `;
+            });
+
+            // Render Report Tables
+            const repIncomeTbody = document.getElementById('report-income-tbody');
+            repIncomeTbody.innerHTML = '';
+            incomeData.forEach((item, index) => {
+                repIncomeTbody.innerHTML += `
+                    <tr>
+                        <td class="p-2 border border-slate-300 text-center font-bold">${index + 1}</td>
+                        <td class="p-2 border border-slate-300 text-center">${formatDate(item.date)}</td>
+                        <td class="p-2 border border-slate-300 font-semibold">${item.item}</td>
+                        <td class="p-2 border border-slate-300 text-right font-bold">₹ ${item.amount.toLocaleString('en-IN')}</td>
+                    </tr>
+                `;
+            });
+
+            const repExpenseTbody = document.getElementById('report-expense-tbody');
+            repExpenseTbody.innerHTML = '';
+            expenseData.forEach((item, index) => {
+                repExpenseTbody.innerHTML += `
+                    <tr>
+                        <td class="p-2 border border-slate-300 text-center font-bold">${index + 1}</td>
+                        <td class="p-2 border border-slate-300 text-center">${formatDate(item.date)}</td>
+                        <td class="p-2 border border-slate-300 font-semibold">${item.item}</td>
+                        <td class="p-2 border border-slate-300 text-right font-bold">₹ ${item.amount.toLocaleString('en-IN')}</td>
+                    </tr>
+                `;
+            });
+
+            // Calculate Balances
+            const balance = totalIncome - totalExpense;
+
+            // Update Displays
+            document.getElementById('total-income-display').innerText = `₹ ${totalIncome.toLocaleString('en-IN')}`;
+            document.getElementById('total-expense-display').innerText = `₹ ${totalExpense.toLocaleString('en-IN')}`;
+            document.getElementById('total-balance-display').innerText = `₹ ${balance.toLocaleString('en-IN')}`;
+
+            document.getElementById('report-total-income').innerText = `₹ ${totalIncome.toLocaleString('en-IN')}`;
+            document.getElementById('report-total-expense').innerText = `₹ ${totalExpense.toLocaleString('en-IN')}`;
+
+            document.getElementById('summary-box-income').innerText = `₹ ${totalIncome.toLocaleString('en-IN')}`;
+            document.getElementById('summary-box-expense').innerText = `₹ ${totalExpense.toLocaleString('en-IN')}`;
+            document.getElementById('summary-box-balance').innerText = `₹ ${balance.toLocaleString('en-IN')}`;
+        }
+
+        function formatDate(dateStr) {
+            if (!dateStr) return '';
+            const parts = dateStr.split('-');
+            if (parts.length === 3) {
+                return `${parts[2]}.${parts[1]}.${parts[0]}`;
+            }
+            return dateStr;
+        }
+
+        function switchTab(tabName) {
+            document.getElementById('tab-content-income').classList.add('hidden');
+            document.getElementById('tab-content-expense').classList.add('hidden');
+            document.getElementById('tab-content-report').classList.add('hidden');
+
+            document.getElementById('tab-btn-income').className = "px-6 py-4 font-bold text-sm border-b-2 border-transparent text-slate-500 hover:text-slate-800 flex items-center gap-2 transition whitespace-nowrap font-malayalam";
+            document.getElementById('tab-btn-expense').className = "px-6 py-4 font-bold text-sm border-b-2 border-transparent text-slate-500 hover:text-slate-800 flex items-center gap-2 transition whitespace-nowrap font-malayalam";
+            document.getElementById('tab-btn-report').className = "px-6 py-4 font-bold text-sm border-b-2 border-transparent text-slate-500 hover:text-slate-800 flex items-center gap-2 transition whitespace-nowrap font-malayalam";
+
+            if (tabName === 'income') {
+                document.getElementById('tab-content-income').classList.remove('hidden');
+                document.getElementById('tab-btn-income').className = "px-6 py-4 font-bold text-sm border-b-2 border-emerald-600 text-emerald-700 bg-white flex items-center gap-2 transition whitespace-nowrap font-malayalam";
+            } else if (tabName === 'expense') {
+                document.getElementById('tab-content-expense').classList.remove('hidden');
+                document.getElementById('tab-btn-expense').className = "px-6 py-4 font-bold text-sm border-b-2 border-rose-600 text-rose-700 bg-white flex items-center gap-2 transition whitespace-nowrap font-malayalam";
+            } else if (tabName === 'report') {
+                document.getElementById('tab-content-report').classList.remove('hidden');
+                document.getElementById('tab-btn-report').className = "px-6 py-4 font-bold text-sm border-b-2 border-indigo-600 text-indigo-700 bg-white flex items-center gap-2 transition whitespace-nowrap font-malayalam";
+            }
+        }
+
+        function openModal(type) {
+            document.getElementById('entry-type').value = type;
+            const titleEl = document.getElementById('modal-title');
+            const today = new Date().toISOString().split('T')[0];
+            document.getElementById('entry-date').value = today;
+            document.getElementById('entry-item').value = '';
+            document.getElementById('entry-amount').value = '';
+
+            if (type === 'income') {
+                titleEl.innerText = "സെന്റർ വരവ് ചേർക്കുക (Add Income)";
+            } else {
+                titleEl.innerText = "സെന്റർ ചെലവ് ചേർക്കുക (Add Expense)";
+            }
+
+            document.getElementById('entry-modal').classList.remove('hidden');
+        }
+
+        function closeModal() {
+            document.getElementById('entry-modal').classList.add('hidden');
+        }
+
+        function handleFormSubmit(e) {
+            e.preventDefault();
+            const type = document.getElementById('entry-type').value;
+            const date = document.getElementById('entry-date').value;
+            const item = document.getElementById('entry-item').value;
+            const amount = Number(document.getElementById('entry-amount').value);
+
+            const newEntry = {
+                id: Date.now(),
+                date,
+                item,
+                amount
+            };
+
+            if (type === 'income') {
+                incomeData.push(newEntry);
+            } else {
+                expenseData.push(newEntry);
+            }
+
+            saveData();
+            closeModal();
+            showMsg('വിജയകരമാണ്', 'വിവരങ്ങൾ വിജയകരമായി സേവ് ചെയ്തിരിക്കുന്നു!', 'success');
+        }
+
+        function deleteEntry(type, id) {
+            if (confirm('തീർച്ചയായും ഈ എൻട്രി ഡിലീറ്റ് ചെയ്യണമോ?')) {
+                if (type === 'income') {
+                    incomeData = incomeData.filter(item => item.id !== id);
+                } else {
+                    expenseData = expenseData.filter(item => item.id !== id);
+                }
+                saveData();
+                showMsg('ഡിലീറ്റ് ചെയ്തു', 'വിവരം വിജയകരമായി നീക്കം ചെയ്തു.', 'success');
+            }
+        }
+
+        function downloadPDF() {
+            const element = document.getElementById('pdf-printable-area');
+            const opt = {
+                margin:       10,
+                filename:     'Wisdom_Center_Ambalappara_Report_2026.pdf',
+                image:        { type: 'jpeg', quality: 0.98 },
+                html2canvas:  { scale: 2, useCORS: true },
+                jsPDF:        { unit: 'mm', format: 'a4', orientation: 'portrait' }
+            };
+            html2pdf().from(element).set(opt).save();
+        }
+
+        function showMsg(title, text, type) {
+            document.getElementById('msg-title').innerText = title;
+            document.getElementById('msg-text').innerText = text;
+            const iconEl = document.getElementById('msg-icon');
+            if (type === 'success') {
+                iconEl.className = "w-14 h-14 rounded-2xl bg-emerald-100 text-emerald-600 flex items-center justify-center mx-auto mb-3 text-2xl";
+                iconEl.innerHTML = '<i class="fa-solid fa-check"></i>';
+            } else {
+                iconEl.className = "w-14 h-14 rounded-2xl bg-rose-100 text-rose-600 flex items-center justify-center mx-auto mb-3 text-2xl";
+                iconEl.innerHTML = '<i class="fa-solid fa-triangle-exclamation"></i>';
+            }
+            document.getElementById('message-modal').classList.remove('hidden');
+        }
+
+        function closeMessageModal() {
+            document.getElementById('message-modal').classList.add('hidden');
+        }
+    </script>
+</body>
+</html>
