@@ -58,6 +58,7 @@
                 padding: 10mm !important;
                 margin: 0 !important;
                 width: 100% !important;
+                max-width: none !important;
             }
         }
     </style>
@@ -578,10 +579,10 @@
             incomeData.forEach((item, index) => {
                 repIncomeTbody.innerHTML += `
                     <tr>
-                        <td class="p-2 border border-slate-300 text-center font-bold">${index + 1}</td>
-                        <td class="p-2 border border-slate-300 text-center">${formatDate(item.date)}</td>
-                        <td class="p-2 border border-slate-300 font-semibold">${item.item}</td>
-                        <td class="p-2 border border-slate-300 text-right font-bold">₹ ${item.amount.toLocaleString('en-IN')}</td>
+                        <td class="p-2 border border-slate-400 text-center font-bold">${index + 1}</td>
+                        <td class="p-2 border border-slate-400 text-center">${formatDate(item.date)}</td>
+                        <td class="p-2 border border-slate-400 font-semibold">${item.item}</td>
+                        <td class="p-2 border border-slate-400 text-right font-bold">₹ ${item.amount.toLocaleString('en-IN')}</td>
                     </tr>
                 `;
             });
@@ -591,10 +592,10 @@
             expenseData.forEach((item, index) => {
                 repExpenseTbody.innerHTML += `
                     <tr>
-                        <td class="p-2 border border-slate-300 text-center font-bold">${index + 1}</td>
-                        <td class="p-2 border border-slate-300 text-center">${formatDate(item.date)}</td>
-                        <td class="p-2 border border-slate-300 font-semibold">${item.item}</td>
-                        <td class="p-2 border border-slate-300 text-right font-bold">₹ ${item.amount.toLocaleString('en-IN')}</td>
+                        <td class="p-2 border border-slate-400 text-center font-bold">${index + 1}</td>
+                        <td class="p-2 border border-slate-400 text-center">${formatDate(item.date)}</td>
+                        <td class="p-2 border border-slate-400 font-semibold">${item.item}</td>
+                        <td class="p-2 border border-slate-400 text-right font-bold">₹ ${item.amount.toLocaleString('en-IN')}</td>
                     </tr>
                 `;
             });
@@ -713,11 +714,11 @@
         function downloadPDF() {
             const element = document.getElementById('pdf-printable-area');
             const opt = {
-                margin:       10,
+                margin:       [10, 10, 10, 10],
                 filename:     'Wisdom_Center_Ambalappara_Report_2026.pdf',
                 image:        { type: 'jpeg', quality: 0.98 },
-                html2canvas:  { scale: 2, useCORS: true },
-                jsPDF:        { unit: 'mm', format: 'a4', orientation: 'portrait' }
+                html2canvas:  { scale: 2, useCORS: true, logging: true, letterRendering: true },
+                jsPDF:        { unit: 'mm', format: 'a4', orientation: 'portrait', compress: true }
             };
             html2pdf().from(element).set(opt).save();
         }
